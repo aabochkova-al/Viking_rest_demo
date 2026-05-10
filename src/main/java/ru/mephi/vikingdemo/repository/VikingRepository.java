@@ -88,6 +88,23 @@ public class VikingRepository {
 
         return key.intValue();
     }
+    
+    public void update(VikingEntity viking) {
+        String sql = """
+            update vikings
+            set name = ?, age = ?, height_cm = ?, hair_color = ?, beard_style = ?, description = ?
+            where id = ?
+        """;
+        jdbcTemplate.update(sql,
+            viking.name(),
+            viking.age(),
+            viking.heightCm(),
+            viking.hairColor().name(),
+            viking.beardStyle().name(),
+            viking.description(),
+            viking.id()
+        );
+    }
 
     public void deleteById(int id) {
         String sql = "delete from vikings where id = ?";

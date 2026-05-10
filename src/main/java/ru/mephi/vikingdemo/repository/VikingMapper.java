@@ -13,12 +13,12 @@ public class VikingMapper {
 
     public VikingEntity toVikingEntity(Viking viking) {
         return new VikingEntity(
-                null,
-                viking.name(),
-                viking.age(),
-                viking.heightCm(),
-                viking.hairColor(),
-                viking.beardStyle(),
+                viking.getId() != null ? viking.getId().intValue() : null,
+                viking.getName(),
+                viking.getAge(),
+                viking.getHeightCm(),
+                viking.getHairColor(),
+                viking.getBeardStyle(),
                 ""
         );
     }
@@ -44,7 +44,7 @@ public class VikingMapper {
                 .map(this::toEquipmentItem)
                 .toList();
 
-        return new Viking(
+        Viking viking = new Viking(
                 entity.name(),
                 entity.age(),
                 entity.heightCm(),
@@ -52,5 +52,7 @@ public class VikingMapper {
                 entity.beardStyle(),
                 equipment
         );
+        viking.setId(entity.id().longValue());
+        return viking;
     }
 }

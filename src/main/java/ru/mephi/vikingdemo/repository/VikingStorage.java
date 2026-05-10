@@ -28,20 +28,34 @@ public class VikingStorage {
         this.vikingMapper = vikingMapper;
     }
 
-    @Transactional
+     @Transactional
     public Viking save(Viking viking) {
-        Integer vikingId = vikingRepository.save(
-                vikingMapper.toVikingEntity(viking)
-        );
+        Integer vikingId = vikingRepository.save(vikingMapper.toVikingEntity(viking));
+        viking.setId(vikingId.longValue());
 
-        for (EquipmentItem item : viking.equipment()) {
-            equipmentItemRepository.save(
-                    vikingMapper.toEquipmentItemEntity(vikingId, item)
-            );
+        for (EquipmentItem item : viking.getEquipment()) {
+            equipmentItemRepository.save(vikingMapper.toEquipmentItemEntity(vikingId, item));
         }
-
         return viking;
     }
+     
+    @Transactional
+    public Viking update(Viking viking) {
+        vikingRepository.update(vikingMapper.toVikingEntity(viking));
+        equipmentItemRepository.deleteByVikingId(viking.getId());
+        for (EquipmentItem item : viking.getEquipment()) {
+            equipmentItemRepository.save(vikingMapper.toEquipmentItemEntity(viking.getId().intValue(), item));
+        }
+        return viking;
+    }
+   
+    public Viking findById(Long id) {
+        VikingEntity entity = vikingRepository.findById(id.intValue())
+                .orElseThrow(() -> new RuntimeException("Викинг с id=" + id + " не найден"));
+        List<EquipmentItemEntity> equipment = equipmentItemRepository.findByVikingId(id);
+        return vikingMapper.toViking(entity, equipment);
+    }
+
 
     public List<Viking> findAll() {
         List<VikingEntity> vikingEntities = vikingRepository.findAll();

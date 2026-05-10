@@ -40,17 +40,25 @@ public class VikingDesktopFrame extends JFrame {
 
         JButton createButton = new JButton("Create random viking");
         createButton.addActionListener(event -> onCreateViking());
+        
+        JButton massButton = new JButton("Generate 10 Vikings");
+        massButton.addActionListener(e -> onMassGenerate());
 
         JPanel bottomPanel = new JPanel();
         bottomPanel.add(createButton);
+        bottomPanel.add(massButton);
         add(bottomPanel, BorderLayout.SOUTH);
         
-        onInit();
+        vikingService.setTableModel(tableModel);
     }
 
     private void onCreateViking() {
         Viking viking = vikingService.createRandomViking();
         tableModel.addViking(viking);
+    }
+    
+    private void onMassGenerate() {
+        vikingService.generateManyRandom(10);
     }
     
     public void addNewViking(Viking viking){

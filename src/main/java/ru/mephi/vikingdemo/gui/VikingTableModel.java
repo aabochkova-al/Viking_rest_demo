@@ -10,13 +10,21 @@ import java.util.stream.Collectors;
 
 public class VikingTableModel extends AbstractTableModel {
 
-    private final String[] columns = {"Name", "Age", "Height (cm)", "Hair color", "Beard style", "Equipment"};
+    private final String[] columns = {"ID", "Name", "Age", "Height (cm)", "Hair color", "Beard style", "Equipment"};
     private final List<Viking> data = new ArrayList<>();
 
     public void addViking(Viking viking) {
         int row = data.size();
         data.add(viking);
         fireTableRowsInserted(row, row);
+    }
+    
+    public void setVikings(List<Viking> newVikings) {
+        data.clear();
+        if (newVikings != null) {
+            data.addAll(newVikings);
+        }
+        fireTableDataChanged();
     }
 
     @Override
@@ -38,12 +46,13 @@ public class VikingTableModel extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         Viking viking = data.get(rowIndex);
         return switch (columnIndex) {
-            case 0 -> viking.name();
-            case 1 -> viking.age();
-            case 2 -> viking.heightCm();
-            case 3 -> viking.hairColor();
-            case 4 -> viking.beardStyle();
-            case 5 -> formatEquipment(viking.equipment());
+            case 0 -> viking.getId();
+            case 1 -> viking.getName();
+            case 2 -> viking.getAge();
+            case 3 -> viking.getHeightCm();
+            case 4 -> viking.getHairColor();
+            case 5 -> viking.getBeardStyle();
+            case 6 -> formatEquipment(viking.getEquipment());
             default -> "";
         };
     }
